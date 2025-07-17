@@ -76,6 +76,8 @@ def load_ply(max_sh_degree: int, path):
     feature_sh_len = ((max_sh_degree + 1) ** 2 - 1) * 3
     features_extra = torch.empty(num_vertices, feature_sh_len)
     for idx in range(feature_sh_len):
+        # 2025.07.17 14:29 
+        # TODO 待解决报错: ValueError: no field of name f_rest_0
         features_extra[:,idx] = torch.tensor(plydata.elements[0]["f_rest_" + str(idx)])
     features_extra = features_extra.reshape(num_vertices, 3, -1)
 
