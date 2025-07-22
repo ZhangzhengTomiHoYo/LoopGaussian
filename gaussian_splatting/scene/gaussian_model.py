@@ -179,6 +179,8 @@ class GaussianModel:
         # All channels except the 3 DC
         for i in range(self._features_dc.shape[1]*self._features_dc.shape[2]):
             l.append('f_dc_{}'.format(i))
+        # 2025/07/22 21:43
+        # 找到问题了 这地方根本就没进去
         for i in range(self._features_rest.shape[1]*self._features_rest.shape[2]):
             l.append('f_rest_{}'.format(i))
         l.append('opacity')

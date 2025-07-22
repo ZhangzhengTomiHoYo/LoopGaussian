@@ -110,6 +110,8 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
             # Log and save
             training_report(tb_writer, iteration, Ll1, loss, l1_loss, iter_start.elapsed_time(iter_end), testing_iterations, scene, render, (pipe, background), Laniso=None)
             if (iteration in saving_iterations):
+                # 2025/07/22 18:19 
+                # 此处为点云数据保存位置
                 print("\n[ITER {}] Saving Gaussians".format(iteration))
                 scene.save(iteration)
 
