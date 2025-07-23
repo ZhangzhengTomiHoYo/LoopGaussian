@@ -22,6 +22,9 @@ from tqdm import tqdm
 from utils.image_utils import psnr
 from argparse import ArgumentParser, Namespace
 from arguments import ModelParams, PipelineParams, OptimizationParams
+# 1. 修改功能为读取样例名 进行保存
+from datetime import datetime
+
 try:
     from torch.utils.tensorboard import SummaryWriter
     TENSORBOARD_FOUND = True
@@ -137,13 +140,28 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
                 torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt" + str(iteration) + ".pth")
 
-def prepare_output_and_logger(args):    
-    if not args.model_path:
-        if os.getenv('OAR_JOB_ID'):
-            unique_str=os.getenv('OAR_JOB_ID')
-        else:
-            unique_str = str(uuid.uuid4())
-        args.model_path = os.path.join("./output/", unique_str[0:10])
+def prepare_output_and_logger(args):
+    # 2025/07/23 14:43 代码理解(脑子有点糊涂了)
+    # 1. (强逻辑) 为空 为False not后为True 则进入条件
+    # 2. (语义化) 如果没有模型路径   
+    # if not args.model_path:
+    #     if os.getenv('OAR_JOB_ID'):
+    #         unique_str=os.getenv('OAR_JOB_ID')
+    #     else:
+    #         unique_str = str(uuid.uuid4())
+    #     args.model_path = os.path.join("./output/", unique_str[0:10])
+    #
+    # 1. 修改功能为读取样例名 进行保存
+    # 2. 修改if表达 更加直观
+    """NOTE 编码注意事项
+    1. ''不等于None
+        使用if not string判断是否为空串 true为空串
+    2. 不使用is
+        is 比较的是对象身份（两个变量是否指向同一个内存地址）。
+        == 比较的是值（两个变量的值是否相等）。
+    """
+    if args.model_path == '': # NOTE ''不等于None
+        args.model_path = os.path.join("./output/", args.source_path.rsplit('/', 1)[-1] + "-" + datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3])
         
     # Set up output folder
     print("Output folder: {}".format(args.model_path))
