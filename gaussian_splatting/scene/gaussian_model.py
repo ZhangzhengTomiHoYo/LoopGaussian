@@ -181,7 +181,7 @@ class GaussianModel:
             l.append('f_dc_{}'.format(i))
         # 2025/07/22 21:43
         # 找到问题了 这地方根本就没进去
-        for i in range(self._features_rest.shape[1]*self._features_rest.shape[2]):
+        for i in range(self._features_rest.shape[1]*self._features_rest.shape[2]): # self._features_rest.shape[1]是0
             l.append('f_rest_{}'.format(i))
         l.append('opacity')
         for i in range(self._scaling.shape[1]):
